@@ -1,9 +1,15 @@
 import {StyleSheet} from 'react-native';
+import {CARD_HEIGHT, CARD_WIDTH} from '../../util/itemSizes';
 
 const st = StyleSheet.create({
-  flatList: {
+  container: {
     flex: 1,
-    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  roledexWrapper: {
+    height: CARD_HEIGHT,
+    width: CARD_WIDTH,
   },
 });
 

@@ -40,6 +40,21 @@ const RoledexCards: ContactCard[] = [
     title: 'Card 3',
     label: 'Lorem ipsum',
   },
+  {
+    id: 'contact-card-4',
+    title: 'Card 4',
+    label: 'Lorem ipsum 4',
+  },
+  {
+    id: 'contact-card-5',
+    title: 'Card 5',
+    label: 'Lorem ipsum 5',
+  },
+  {
+    id: 'contact-card-6',
+    title: 'Card 6',
+    label: 'Lorem ipsum 6',
+  },
 ];
 
 export {RoledexCards};

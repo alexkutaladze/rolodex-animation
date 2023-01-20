@@ -1,41 +1,58 @@
-import React, {useRef} from 'react';
-import {Animated} from 'react-native';
-import {CARD_HEIGHT} from '../../util/itemSizes';
-
+import React, {useCallback, useState} from 'react';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {RoledexCards} from '../../util/roledexInfo';
+import BackgroundCard from '../BackgroundCard';
 import ContactCard from '../ContactCard';
+import BottomCard from '../ContactCard/BottomCard';
+import TopCard from '../ContactCard/TopCard';
+
 import st from './style';
 
 const Roledex = () => {
-  const scrollY = useRef(new Animated.Value(0));
+  const [index, setIndex] = useState(1);
+
+  const prev = RoledexCards[index - 1];
+  const current = RoledexCards[index];
+  const next = RoledexCards[index + 1];
+
+  const onFlip = useCallback((isNext: boolean) => {
+    setIndex(idx =>
+      isNext
+        ? Math.min(RoledexCards.length - 1, idx + 1)
+        : Math.max(0, idx - 1),
+    );
+  }, []);
+
+  console.log({index});
 
   return (
-    <Animated.FlatList
-      data={RoledexCards.reverse()}
-      renderItem={({item, index}) => {
-        const inputRange = [
-          index * CARD_HEIGHT,
-          (index + 1) * CARD_HEIGHT,
-          (index + 2) * CARD_HEIGHT,
-        ];
-
-        const scale = scrollY.current.interpolate({
-          inputRange,
-          outputRange: [1, 1.05, 1.1],
-        });
-        return (
-          <Animated.View key={item.id} style={{transform: [{scale}]}}>
-            <ContactCard card={item} />
-          </Animated.View>
-        );
-      }}
-      showsVerticalScrollIndicator={false}
-      bounces={false}
-      scrollEventThrottle={16}
-      snapToInterval={CARD_HEIGHT}
-      onScroll={e => console.log(e.nativeEvent.contentOffset.y)}
-      style={st.flatList}
-    />
+    <SafeAreaView style={st.container}>
+      <View style={st.roledexWrapper}>
+        <BackgroundCard
+          top={<TopCard card={!prev ? current : prev} />}
+          bottom={<BottomCard card={!next ? current : next} />}
+        />
+        {!prev ? (
+          <View style={st.container} />
+        ) : (
+          <ContactCard
+            front={<TopCard card={current} />}
+            back={<BottomCard card={prev} />}
+            onFlip={onFlip}
+          />
+        )}
+        {!next ? (
+          <View style={st.container} />
+        ) : (
+          <ContactCard
+            front={<BottomCard card={current} />}
+            back={<TopCard card={next} />}
+            onFlip={onFlip}
+            bottom
+          />
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
